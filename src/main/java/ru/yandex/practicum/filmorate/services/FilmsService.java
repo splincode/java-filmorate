@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.FilmExistException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundFilmException;
 import ru.yandex.practicum.filmorate.models.Film;
 import ru.yandex.practicum.filmorate.stores.FilmsStore;
 
@@ -12,47 +14,31 @@ public class FilmsService {
     @Autowired
     private FilmsStore store;
 
-    @Autowired
-    private FilmsValidatorService validator;
-
     public Film create(Film film) {
-        validator.validate(film);
-
-        if (store.find(film) != null) {
-            throw new RuntimeException("Такой фильм уже существует");
+        if (store.hasFilm(film)) {
+            throw new FilmExistException();
         }
 
-        Film newFilm = Film.builder()
-                .id(store.incrementAndGetUniqueId())
+        return store.set(Film.builder()
                 .name(film.getName())
                 .description(film.getDescription())
                 .releaseDate(film.getReleaseDate())
                 .duration(film.getDuration())
-                .build();
-
-        store.set(newFilm);
-
-        return newFilm;
+                .build());
     }
 
     public Film update(Film film) {
         if (!store.has(film)) {
-            throw new RuntimeException("Не удалось обновить. Убедитесь, что такой фильм с таким ID существует");
+            throw new NotFoundFilmException();
         }
 
-        validator.validate(film);
-
-        Film updatedFilm = Film.builder()
+        return store.set(Film.builder()
                 .id(film.getId())
                 .name(film.getName())
                 .description(film.getDescription())
                 .releaseDate(film.getReleaseDate())
                 .duration(film.getDuration())
-                .build();
-
-        store.set(updatedFilm);
-
-        return updatedFilm;
+                .build());
     }
 
     public Film delete(Film film) {

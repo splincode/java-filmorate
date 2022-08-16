@@ -3,42 +3,42 @@ package ru.yandex.practicum.filmorate.stores;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.models.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Component
-public class FilmsStore {
-    static long autoIncrementId;
-
-    private final Map<Long, Film> filmsByIds = new HashMap();
-    private final Map<String, Film> filmsByNames = new HashMap();
-
-    public long incrementAndGetUniqueId() {
-        autoIncrementId = autoIncrementId + 1;
-        return autoIncrementId;
-    }
-
+public class FilmsStore extends Store<Film> {
     public boolean has(Film film) {
-        return filmsByIds.containsKey(film.getId());
+        return data.containsKey(film.getId());
     }
 
-    public void set(Film film) {
-        filmsByIds.put(film.getId(), film);
-        filmsByNames.put(film.getName(), film);
+    public Film set(Film film) {
+        Film result = film;
+
+        if (film.getId() == 0) {
+            long id = incrementAndGetUniqueId();
+            result = Film.builder().id(id).description(film.getDescription()).duration(film.getDuration()).name(film.getName()).releaseDate(film.getReleaseDate()).build();
+            data.put(id, result);
+        } else {
+            data.put(film.getId(), film);
+        }
+
+        return result;
     }
 
     public void delete(Film film) {
-        filmsByIds.remove(film.getId(), film);
-        filmsByNames.remove(film.getName(), film);
+        data.remove(film.getId(), film);
     }
 
-    public Film find(Film film) {
-        return filmsByNames.get(film.getName());
-    }
+    public boolean hasFilm(Film film) {
+        boolean found = false;
 
-    public List<Film> values() {
-        return new ArrayList<>(filmsByIds.values());
+        for (Map.Entry<Long, Film> entry : data.entrySet()) {
+            if (entry.getValue().getName().equals(film.getName())) {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
     }
 }
