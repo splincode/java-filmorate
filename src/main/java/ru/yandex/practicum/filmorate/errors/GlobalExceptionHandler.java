@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yandex.practicum.filmorate.exceptions.FilmExistException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundFilmException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundFilmForUpdateException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundUserException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundUserForUpdateException;
 import ru.yandex.practicum.filmorate.exceptions.UserExistException;
 import ru.yandex.practicum.filmorate.models.ApiError;
 
@@ -23,18 +25,30 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
-        List<String> errorList = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
+        List<String> errorList = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(new ApiError<>(status.value(), errorList), status);
     }
 
-    @ExceptionHandler({UserExistException.class, FilmExistException.class})
+    @ExceptionHandler({
+            UserExistException.class,
+            FilmExistException.class
+    })
     public final ResponseEntity<ApiError<String>> handleUserExistException(Exception ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         return new ResponseEntity<>(new ApiError<>(status.value(), ex.getMessage()), status);
     }
 
-    @ExceptionHandler({NotFoundUserException.class, NotFoundFilmException.class})
+    @ExceptionHandler({
+            NotFoundUserForUpdateException.class,
+            NotFoundFilmForUpdateException.class,
+            NotFoundFilmException.class,
+            NotFoundUserException.class
+    })
     public final ResponseEntity<ApiError<String>> handleNotFoundException(Exception ex) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return new ResponseEntity<>(new ApiError<>(status.value(), ex.getMessage()), status);

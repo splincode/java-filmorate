@@ -13,15 +13,20 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>filmorate</name>
 	<description>Spring Web</description>
+
 	<properties>
 		<java.version>11</java.version>
+		<apache-commons.version>3.11</apache-commons.version>
+		<maven-surefire-common.version>2.22.2</maven-surefire-common.version>
+		<gson.version>2.9.1</gson.version>
+		<given-when-then.version>0.1.2</given-when-then.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -38,14 +43,24 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.11</version>
+			<version>${apache-commons.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.surefire</groupId>
 			<artifactId>maven-surefire-common</artifactId>
-			<version>2.22.2</version>
+			<version>${maven-surefire-common.version}</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.rabriel</groupId>
+			<artifactId>given-when-then</artifactId>
+			<version>${given-when-then.version}</version>
+		</dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
