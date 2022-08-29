@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class FilmMock {
-    long id = 0;
+    long id;
     String name;
     String description;
     String releaseDate;

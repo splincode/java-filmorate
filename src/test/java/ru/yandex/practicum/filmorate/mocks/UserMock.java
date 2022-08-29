@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class UserMock {
-    long id = 0;
+    long id;
     String email;
     String login;
     String name;

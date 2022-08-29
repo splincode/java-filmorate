@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.models;
 import lombok.Builder;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
-import ru.yandex.practicum.filmorate.validators.ReleaseDate;
+import ru.yandex.practicum.filmorate.annotations.ReleaseDate;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
